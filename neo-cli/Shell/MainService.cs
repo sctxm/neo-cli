@@ -753,23 +753,14 @@ namespace Neo.Shell
 
         private bool OnShowStateCommand(string[] args)
         {
-            bool stop = false;
-            Task.Run(() =>
-            {
-                while (!stop)
-                {
-                    uint wh = 0;
-                    if (Program.Wallet != null)
-                        wh = (Program.Wallet.WalletHeight > 0) ? Program.Wallet.WalletHeight - 1 : 0;
-                    Console.Clear();
-                    Console.WriteLine($"block: {wh}/{Blockchain.Singleton.Height}/{Blockchain.Singleton.HeaderHeight}  connected: {LocalNode.Singleton.ConnectedCount}  unconnected: {LocalNode.Singleton.UnconnectedCount}");
-                    foreach (RemoteNode node in LocalNode.Singleton.GetRemoteNodes().Take(Console.WindowHeight - 2))
-                        Console.WriteLine($"  ip: {node.Remote.Address}\tport: {node.Remote.Port}\tlisten: {node.ListenerPort}\theight: {node.Version?.StartHeight}");
-                    Thread.Sleep(500);
-                }
-            });
-            Console.ReadLine();
-            stop = true;
+            uint wh = 0;
+            if (Program.Wallet != null)
+                wh = (Program.Wallet.WalletHeight > 0) ? Program.Wallet.WalletHeight - 1 : 0;
+            Console.WriteLine("------------RemoteNode List------------");
+            Console.WriteLine($"block: {wh}/{Blockchain.Singleton.Height}/{Blockchain.Singleton.HeaderHeight}  connected: {LocalNode.Singleton.ConnectedCount}  unconnected: {LocalNode.Singleton.UnconnectedCount}");
+            foreach (RemoteNode node in LocalNode.Singleton.GetRemoteNodes().Take(Console.WindowHeight - 2))
+                Console.WriteLine($"  ip: {node.Remote.Address}\tport: {node.Remote.Port}\tlisten: {node.ListenerPort}\theight: {node.Version?.StartHeight}");
+            Console.WriteLine("---------------------------------------");
             return true;
         }
 
